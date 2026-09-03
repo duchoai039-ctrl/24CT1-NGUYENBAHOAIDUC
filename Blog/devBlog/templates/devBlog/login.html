@@ -1,0 +1,26 @@
+{% extends 'devBlog/base.html' %}
+
+{% block title %}Đăng nhập - Perspect{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<div class="auth-card card" style="max-width:450px;margin:auto;">
+  <h1>Đăng nhập</h1>
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+  <form method="POST" class="form-group">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="username">Tên đăng nhập:</label>
+      <input type="text" name="username" id="username" value="{{ registered_username|default:'' }}" required />
+    </div>
+    <div class="form-group">
+      <label for="password">Mật khẩu:</label>
+      <input type="password" name="password" id="password" required />
+    </div>
+    <button type="submit" class="btn"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</button>
+  </form>
+  <p>Chưa có tài khoản? <a href="{% url 'register' %}">Đăng ký</a></p>
+</div>
+{% endblock %}

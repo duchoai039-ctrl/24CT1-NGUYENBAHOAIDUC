@@ -1,0 +1,15 @@
+{% extends 'devBlog/base.html' %}
+
+{% block title %}Xóa bài viết - Perspect{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1 class="mb-3"><i class="fa-solid fa-trash-can"></i> Xóa bài viết</h1>
+  <p>Bạn có chắc muốn xóa bài: <strong>{{ post.title }}</strong>?</p>
+  <form method="POST" class="form-group">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-check"></i> Xác nhận xóa</button>
+    <a href="{% url 'post_detail' post.id %}" class="btn"><i class="fa-solid fa-xmark"></i> Hủy</a>
+  </form>
+</div>
+{% endblock %}

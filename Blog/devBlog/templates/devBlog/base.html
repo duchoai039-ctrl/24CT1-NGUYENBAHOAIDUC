@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Perspect - Góc nhìn cuộc sống{% endblock %}</title>
+    {% comment %} Existing CSS link {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Center Screen Welcome Modal (On Successful Registration) -->
+    {% if show_welcome %}
+    <div id="welcome-modal-overlay" class="welcome-modal-overlay">
+      <div class="welcome-modal-card">
+        <div class="modal-sparkle-blob blob-1"></div>
+        <div class="modal-sparkle-blob blob-2"></div>
+
+        <div class="welcome-badge">
+          <i class="fa-solid fa-circle-check"></i> ĐĂNG KÝ THÀNH CÔNG
+        </div>
+
+        <h1 class="welcome-heading">
+          CHÀO MỪNG BẠN ĐẾN VỚI PERSPECT
+        </h1>
+
+        <p class="welcome-subtext">
+          {% if registered_username %}Xin chào <strong>{{ registered_username }}</strong>! {% endif %}Tài khoản của bạn đã sẵn sàng. Hãy bắt đầu kết nối, chia sẻ những câu chuyện và góc nhìn đa chiều về cuộc sống!
+        </p>
+
+        <div class="welcome-modal-actions">
+          <button type="button" class="btn-welcome-arrow" onclick="closeWelcomeModal()" title="Tiếp tục đăng nhập">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="toast-notification toast-{{ message.tags|default:'info' }}">
+            <div class="toast-icon">
+              <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <div class="toast-body">
+              <span>{{ message }}</span>
+            </div>
+            <button type="button" class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {% include 'devBlog/_navbar.html' %}
+    <main class="container fade-in">
+        {% block content %}{% endblock %}
+    </main>
+    {% include 'devBlog/_footer.html' %}
+
+    <script>
+      function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcons();
+      }
+
+      function updateThemeIcons() {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const sunIcons = document.querySelectorAll('.theme-sun-icon');
+        const moonIcons = document.querySelectorAll('.theme-moon-icon');
+        sunIcons.forEach(el => el.style.display = isLight ? 'none' : 'inline-block');
+        moonIcons.forEach(el => el.style.display = isLight ? 'inline-block' : 'none');
+      }
+
+      function closeWelcomeModal() {
+        const overlay = document.getElementById('welcome-modal-overlay');
+        if (overlay) {
+          overlay.classList.add('fade-out-modal');
+          setTimeout(() => {
+            overlay.remove();
+            const pwdInput = document.getElementById('password');
+            if (pwdInput) pwdInput.focus();
+          }, 350);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        updateThemeIcons();
+
+        // Auto dismiss server toasts
+        document.querySelectorAll('.toast-notification').forEach(toast => {
+          setTimeout(() => {
+            toast.classList.add('toast-fade-out');
+            setTimeout(() => toast.remove(), 400);
+          }, 4500);
+        });
+      });
+    </script>
+</body>
+</html>
