@@ -27,10 +27,6 @@
 
       <div class="profile-details-grid">
         <div class="profile-detail-item">
-          <i class="fa-solid fa-envelope"></i>
-          <span>{{ user.email }}</span>
-        </div>
-        <div class="profile-detail-item">
           <i class="fa-solid fa-calendar-days"></i>
           <span>Tham gia: {{ user.date_joined|date:"d/m/Y" }}</span>
         </div>
@@ -47,8 +43,8 @@
           <span class="stat-label">Lượt thích</span>
         </div>
         <div class="profile-stat-box">
-          <span class="stat-number">{{ total_comments }}</span>
-          <span class="stat-label">Bình luận</span>
+          <span class="stat-number">{{ follower_count }}</span>
+          <span class="stat-label">Người theo dõi</span>
         </div>
       </div>
 

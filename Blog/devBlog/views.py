@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Post, Tag, UserProfile
+from .models import Post, Tag, UserProfile, Follow
 from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -202,13 +202,13 @@ def profile(request):
     ).order_by('-created_at')
 
     total_likes_received = sum(post.total_likes() for post in posts)
-    total_comments_received = sum(post.total_comments() for post in posts)
+    follower_count = Follow.objects.filter(following=request.user).count()
     user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
     return render(request, 'devBlog/profile.html', {
         'posts': posts,
         'total_likes': total_likes_received,
-        'total_comments': total_comments_received,
+        'follower_count': follower_count,
         'user_profile': user_profile,
     })
 
