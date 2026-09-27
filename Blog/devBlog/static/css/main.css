@@ -861,6 +861,16 @@ a:hover { color: var(--clr-primary-dark); }
 .btn-danger { background:linear-gradient(135deg, #e74c3c, #c0392b); box-shadow:0 4px 15px rgba(231,76,60,.3); }
 .btn-danger:hover { background:linear-gradient(135deg, #ff6b6b, #e74c3c); box-shadow:0 6px 20px rgba(231,76,60,.45); }
 
+/* Follow / Unfollow buttons */
+.btn-follow { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, .3); }
+.btn-follow:hover { background: linear-gradient(135deg, #34d399, #10b981); box-shadow: 0 6px 20px rgba(16, 185, 129, .45); }
+.btn-unfollow { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: none; }
+.btn-unfollow:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.5); color: #f87171; box-shadow: 0 4px 15px rgba(239, 68, 68, .2); }
+
+/* Author profile link */
+.author-link { color: #60a5fa; text-decoration: none; position: relative; z-index: 2; transition: color 0.2s ease; }
+.author-link:hover { color: #93c5fd; text-decoration: underline; }
+
 /* Forms */
 .form-group { margin-bottom:var(--spacing); }
 .form-group label { display:block; margin-bottom:.3rem; font-weight:500; color:rgba(255,255,255,.85); }
@@ -1147,7 +1157,7 @@ hr {
 
 .profile-stats-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1521,3 +1531,22 @@ hr {
 
 
 
+[data-theme="light"] .btn-unfollow {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #334155;
+}
+
+[data-theme="light"] .btn-unfollow:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #dc2626;
+}
+
+[data-theme="light"] .author-link {
+  color: #2563eb;
+}
+
+[data-theme="light"] .author-link:hover {
+  color: #1d4ed8;
+}

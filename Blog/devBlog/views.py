@@ -197,20 +197,56 @@ def delete_post(request, post_id):
 
 @login_required
 def profile(request):
+    return user_profile(request, request.user.username)
+
+
+@login_required
+def user_profile(request, username):
+    profile_user = get_object_or_404(User, username=username)
     posts = Post.objects.filter(
-        author=request.user
+        author=profile_user
     ).order_by('-created_at')
 
     total_likes_received = sum(post.total_likes() for post in posts)
-    follower_count = Follow.objects.filter(following=request.user).count()
-    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    follower_count = Follow.objects.filter(following=profile_user).count()
+    following_count = Follow.objects.filter(follower=profile_user).count()
+    user_profile_obj, _ = UserProfile.objects.get_or_create(user=profile_user)
+
+    is_own_profile = (request.user == profile_user)
+    is_following = False
+    if not is_own_profile:
+        is_following = Follow.objects.filter(
+            follower=request.user, following=profile_user
+        ).exists()
 
     return render(request, 'devBlog/profile.html', {
+        'profile_user': profile_user,
         'posts': posts,
         'total_likes': total_likes_received,
         'follower_count': follower_count,
-        'user_profile': user_profile,
+        'following_count': following_count,
+        'user_profile': user_profile_obj,
+        'is_own_profile': is_own_profile,
+        'is_following': is_following,
     })
+
+
+@login_required
+def toggle_follow(request, username):
+    target_user = get_object_or_404(User, username=username)
+
+    if target_user == request.user:
+        return redirect('user_profile', username=username)
+
+    follow_obj = Follow.objects.filter(
+        follower=request.user, following=target_user
+    )
+    if follow_obj.exists():
+        follow_obj.delete()
+    else:
+        Follow.objects.create(follower=request.user, following=target_user)
+
+    return redirect('user_profile', username=username)
 
 
 @login_required

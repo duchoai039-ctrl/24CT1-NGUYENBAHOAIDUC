@@ -5,7 +5,7 @@
 {% block content %}
 <article class="card post-card">
   <h1>{{ post.title }}</h1>
-  <p class="meta">Đăng bởi <strong>{{ post.author.username }}</strong> · {{ post.created_at|date:"d/m/Y H:i" }}</p>
+  <p class="meta">Đăng bởi <a href="{% url 'user_profile' post.author.username %}" class="author-link"><strong>{{ post.author.username }}</strong></a> · {{ post.created_at|date:"d/m/Y H:i" }}</p>
   {% if post.tags.all %}
     <div class="post-tags">
       {% for tag in post.tags.all %}
@@ -46,7 +46,7 @@
   {% endif %}
   {% for comment in comments %}
     <div class="card" style="margin-top:1rem;">
-      <p><strong>{{ comment.author.username }}</strong> <small>{{ comment.created_at|date:"d/m/Y H:i" }}</small></p>
+      <p><a href="{% url 'user_profile' comment.author.username %}" class="author-link"><strong>{{ comment.author.username }}</strong></a> <small>{{ comment.created_at|date:"d/m/Y H:i" }}</small></p>
       <p>{{ comment.content|linebreaks }}</p>
     </div>
   {% empty %}

@@ -16,6 +16,8 @@ urlpatterns = [
     path('post/<int:post_id>/delete/', views.delete_post, name='delete_post'),
 
     path('profile/', views.profile, name='profile'),
+    path('profile/<str:username>/', views.user_profile, name='user_profile'),
+    path('profile/<str:username>/follow/', views.toggle_follow, name='toggle_follow'),
     path('my-posts/', views.my_posts, name='my_posts'),
     path('tag/<int:tag_id>/', views.posts_by_tag, name='posts_by_tag'),
 ]

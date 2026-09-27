@@ -1,6 +1,6 @@
 {% extends 'devBlog/base.html' %}
 
-{% block title %}Trang cá nhân - {{ user.username }}{% endblock %}
+{% block title %}Trang cá nhân - {{ profile_user.username }}{% endblock %}
 
 {% block content %}
 <div class="profile-container">
@@ -11,24 +11,32 @@
     <div class="profile-main-info">
       <div class="profile-avatar-wrapper">
         <div class="profile-avatar">
-          <span>{{ user.username|first|upper }}</span>
+          <span>{{ profile_user.username|first|upper }}</span>
         </div>
       </div>
 
       <div class="profile-meta-top">
         <div class="profile-user-names">
-          <h1 class="profile-name">{{ user.username }}</h1>
-          <p class="profile-handle">@{{ user.username }}</p>
+          <h1 class="profile-name">{{ profile_user.username }}</h1>
+          <p class="profile-handle">@{{ profile_user.username }}</p>
         </div>
         <div class="profile-actions">
-          <a href="{% url 'create_post' %}" class="btn"><i class="fa-solid fa-plus"></i> Đăng bài mới</a>
+          {% if is_own_profile %}
+            <a href="{% url 'create_post' %}" class="btn"><i class="fa-solid fa-plus"></i> Đăng bài mới</a>
+          {% else %}
+            {% if is_following %}
+              <a href="{% url 'toggle_follow' profile_user.username %}" class="btn btn-unfollow"><i class="fa-solid fa-user-check"></i> Đang theo dõi</a>
+            {% else %}
+              <a href="{% url 'toggle_follow' profile_user.username %}" class="btn btn-follow"><i class="fa-solid fa-user-plus"></i> Theo dõi</a>
+            {% endif %}
+          {% endif %}
         </div>
       </div>
 
       <div class="profile-details-grid">
         <div class="profile-detail-item">
           <i class="fa-solid fa-calendar-days"></i>
-          <span>Tham gia: {{ user.date_joined|date:"d/m/Y" }}</span>
+          <span>Tham gia: {{ profile_user.date_joined|date:"d/m/Y" }}</span>
         </div>
       </div>
 
@@ -45,6 +53,10 @@
         <div class="profile-stat-box">
           <span class="stat-number">{{ follower_count }}</span>
           <span class="stat-label">Người theo dõi</span>
+        </div>
+        <div class="profile-stat-box">
+          <span class="stat-number">{{ following_count }}</span>
+          <span class="stat-label">Đang theo dõi</span>
         </div>
       </div>
 
@@ -65,7 +77,11 @@
   <!-- User Posts Feed -->
   <div class="profile-posts-section">
     <div class="profile-section-heading">
-      <h2><i class="fa-solid fa-newspaper"></i> Bài viết của bạn ({{ posts.count }})</h2>
+      {% if is_own_profile %}
+        <h2><i class="fa-solid fa-newspaper"></i> Bài viết của bạn ({{ posts.count }})</h2>
+      {% else %}
+        <h2><i class="fa-solid fa-newspaper"></i> Bài viết của {{ profile_user.username }} ({{ posts.count }})</h2>
+      {% endif %}
     </div>
 
     {% for post in posts %}
@@ -98,15 +114,21 @@
         </span>
       </div>
 
+      {% if is_own_profile %}
       <div class="post-owner-actions" style="margin-top: 0.85rem; padding-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.08);">
         <a href="{% url 'edit_post' post.id %}" class="btn" style="font-size: 0.82rem; padding: 0.35rem 0.85rem; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4);"><i class="fa-solid fa-pen"></i> Sửa bài</a>
         <a href="{% url 'delete_post' post.id %}" class="btn btn-danger" style="font-size: 0.82rem; padding: 0.35rem 0.85rem; margin-left: 0.5rem;"><i class="fa-solid fa-trash"></i> Xóa</a>
       </div>
+      {% endif %}
     </article>
     {% empty %}
     <div class="card" style="text-align: center; padding: 2.5rem 1.5rem;">
-      <p style="color: rgba(255,255,255,0.6); margin-bottom: 1.25rem;">Bạn chưa đăng bài viết nào.</p>
-      <a href="{% url 'create_post' %}" class="btn"><i class="fa-solid fa-plus"></i> Đăng bài viết đầu tiên ngay</a>
+      {% if is_own_profile %}
+        <p style="color: rgba(255,255,255,0.6); margin-bottom: 1.25rem;">Bạn chưa đăng bài viết nào.</p>
+        <a href="{% url 'create_post' %}" class="btn"><i class="fa-solid fa-plus"></i> Đăng bài viết đầu tiên ngay</a>
+      {% else %}
+        <p style="color: rgba(255,255,255,0.6);">{{ profile_user.username }} chưa đăng bài viết nào.</p>
+      {% endif %}
     </div>
     {% endfor %}
   </div>
